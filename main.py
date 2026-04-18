@@ -7,7 +7,20 @@ in order to easily identify schedules, rooms, and / or what course they would ta
 
 Author: Sergie Alexis S. Maldonado
 '''
+import json
+import os
 
+def load_schedules():
+    if os.path.exists("schedules.json"):
+        with open("schedules.json", "r") as file:
+            return json.load(file)
+    return {}
+
+def save_schedules():
+    with open("schedules.json", "w") as file:
+        json.dump(schedules, file, indent = 4)
+    print("Schedules saved!")
+    
 def display_menu():
     print("=====================")
     print("      Main Menu      ")
@@ -258,21 +271,24 @@ def delete_schedule(schedules):
                        
                            
 if __name__ == "__main__":
-    schedules = {}
+    schedules = load_schedules()
     while True:
         display_menu()
         choice = int(input("Enter choice: "))
         match choice:
             case 1:
                 add_schedule(schedules)
+                save_schedules()
             case 2:
                 search_schedule(schedules)
             case 3:
                 display_schedule(schedules)
             case 4:
                 update_schedule(schedules)
+                save_schedules()
             case 5:
                 delete_schedule(schedules)
+                save_schedules()
             case 6:
                 print("Exiting Program...")
                 break
