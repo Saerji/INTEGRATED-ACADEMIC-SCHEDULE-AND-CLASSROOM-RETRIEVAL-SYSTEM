@@ -28,14 +28,14 @@ ctk.CTkLabel(sidebar, text="Welcome!", font=("Arial",20,"bold")).pack(pady=10)
 ctk.CTkFrame(sidebar, fg_color="gray", height=1).pack(fill="x", padx=15, pady=8)
 
 sidebar_nav = [
-    ("Add Schedule"),
-    ("Search Schedule/s"),
-    ("View Schedules"),
-    ("Update Schedule"),
-    ("Delete Schedule")
+    ("Add Schedule", "add"),
+    ("Search Schedule/s", "search"),
+    ("View Schedules", "view"),
+    ("Update Schedule", "update"),
+    ("Delete Schedule", "delete")
 ]
 
-for i in sidebar_nav:
+for i, view in sidebar_nav:
     btn = ctk.CTkButton (sidebar,
                          text = f"{i}",
                          font = ("Georgia", 17, "bold"),
@@ -44,7 +44,7 @@ for i in sidebar_nav:
                          hover_color="#F1EAD8",
                          corner_radius=3,
                          height=55,
-                         command=None)
+                         command=lambda v=view : switch_view(v))
     btn.pack(fill="x", pady=10, padx=0)
     
 exit_btn = ctk.CTkButton (sidebar,
@@ -72,5 +72,58 @@ title = ctk.CTkLabel(title_bar,
                      anchor="w")
 title.pack(padx=5,pady=0, side="left")
 
+content_frame = ctk.CTkFrame(main_area, fg_color="#F8F4EC", corner_radius=0)
+content_frame.pack(fill="both", expand=True, padx=20, pady=20)
+
+
+
+def show_add_schedule():
+    ctk.CTkLabel(content_frame,
+                 text="Add Schedule",
+                 font=("Georgia", 24, "bold"),
+                 text_color="#344E41").pack(padx=20, pady=20)
+    
+
+
+def show_search_schedule():
+    ctk.CTkLabel(content_frame,
+                 text="Search",
+                 font=("Arial", 20, "bold")
+                 ).pack()
+
+def show_view_schedules():
+    ctk.CTkLabel(content_frame,
+                 text="View",
+                 font=("Arial", 20, "bold")
+                 ).pack()
+
+def show_update_schedule():
+    ctk.CTkLabel(content_frame,
+                 text="update Sched",
+                 font=("Arial", 20, "bold")
+                 ).pack()
+    
+def show_delete_schedule():
+    ctk.CTkLabel(content_frame,
+                 text="delete sched",
+                 font=("Arial", 20, "bold")
+                 ).pack()
+    
+def switch_view(view_name):
+    for widget in content_frame.winfo_children():
+        widget.destroy()
+        
+    if view_name == "add":
+        show_add_schedule()
+    elif view_name == "search":
+        show_search_schedule()
+    elif view_name == "view":
+        show_view_schedules()
+    elif view_name == "update":
+        show_update_schedule()
+    elif view_name == "delete":
+        show_delete_schedule()
+        
+        
 root.mainloop()
     
