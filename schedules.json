@@ -1,1 +1,18 @@
-{}
+{
+    "SDSADD": [
+        {
+            "Title": "dsacsdfe",
+            "Day": "Tuesday",
+            "Time": "01 : 00",
+            "Room": "sdaasffsa"
+        }
+    ],
+    "CS 102": [
+        {
+            "Title": "Advanced  Computer Programming",
+            "Day": "Monday",
+            "Time": "10 : 00",
+            "Room": "LAB 3"
+        }
+    ]
+}

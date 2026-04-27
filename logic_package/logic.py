@@ -11,7 +11,7 @@ def save_schedules(schedules):
     with open("schedules.json", "w") as file:
         json.dump(schedules, file, indent = 4)
     
-def add_schedule(schedules, course_title, schedule_day, schedule_time, schedule_room, course_code):   
+def add_schedule(schedules, course_code, course_title, schedule_day, schedule_time, schedule_room):    
     entry = {
         "Title" : course_title,
         "Day" : schedule_day,
@@ -77,5 +77,6 @@ def delete_schedule(schedules, code, num):
     save_schedules(schedules)
     return "deleted" 
 
+schedules = load_schedules()
 if __name__ == "__main__":
-    schedules = load_schedules()
+    pass
