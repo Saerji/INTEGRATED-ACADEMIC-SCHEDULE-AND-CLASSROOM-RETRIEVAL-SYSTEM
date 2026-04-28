@@ -288,10 +288,202 @@ def show_view_schedules():
     schedules_table.pack(fill="both", expand=True, padx=20, pady=10)
     
 def show_search_schedule():
+    LABEL_WIDTH = 180
+    PADY = 5
     ctk.CTkLabel(content_frame,
-                 text="Search",
-                 font=("Arial", 20, "bold")
-                 ).pack()
+                 text="Search Schedules",
+                 font=("Georgia", 24, "bold"),
+                 text_color="#344E41").pack(padx=20, pady=20)
+    ctk.CTkFrame(content_frame, fg_color="#7A8B76", height=1).pack(fill="x", padx=15, pady=10) #divider
+    
+    cat_frame = ctk.CTkFrame(content_frame, fg_color="transparent")
+    cat_frame.pack(anchor="w", padx=(15,10), pady=PADY)
+    ctk.CTkLabel(cat_frame,
+                 text="Choose search category:",
+                 font=("Georgia", 14),
+                 justify="left",
+                 width=LABEL_WIDTH,
+                 text_color="#344E41").pack(side="left", padx=(0, 10), pady=5)
+    search_frame = ctk.CTkFrame(content_frame, fg_color="transparent")
+    search_frame.pack(anchor="w", padx=(15,10), fill="x")
+    
+    results_frame = ctk.CTkFrame(content_frame, fg_color="transparent")
+    results_frame.pack(fill="both", expand=True, padx=15, pady=10)
+    
+    def show_all():
+        all_results = []
+        for code, entries in logic_package.schedules.items():
+            for entry in entries:
+                all_results.append({"code": code, **entry})
+        show_results(all_results)
+    
+    def show_results (data):
+        for widget in results_frame.winfo_children():
+            widget.destroy()
+            
+        if not data:
+            ctk.CTkLabel(results_frame,
+                 text='No schedule/s found with the indicated search. :) ',
+                 font=("Georgia", 24, "bold"),
+                 text_color="#344E41").pack(padx=20, pady=20)
+            return
+        
+        table_data = [["Course Code", "Course Title", "Day", "Time", "Room"]]
+    
+        for entry in data:
+            table_data.append([
+                entry["code"],
+                entry["Title"],
+                entry["Day"],
+                entry["Time"],
+                entry["Room"]
+            ])
+            
+        search_table = CTkTable(results_frame,
+                            row=len(table_data),
+                            column=5,
+                            values=table_data,
+                            header_color="#6B8F5E",
+                            colors=["#A8B89A", "#A8B89A"],
+                            hover_color="#EEF2EA",
+                            font = ("Georgia", 13)
+                            )
+        search_table.pack(fill="both", expand=True, padx=20, pady=10)
+        
+    def change_searchbox(choice):
+            for widget in search_frame.winfo_children():
+                widget.destroy()
+            
+            show_all()
+            
+            if choice == "By Course Code":
+                search_var = ctk.StringVar()
+                search_var.trace("w", lambda *args: show_results(
+                    logic_package.search_code(logic_package.schedules, search_var.get().strip().upper()) or []
+                ))
+                ctk.CTkEntry(search_frame,
+                                        textvariable=search_var,
+                                        placeholder_text="  🔍︎Search Course Code",
+                                        font=("Georgia", 15),
+                                        width=500,
+                                        height=50).pack(side="left",pady = 5, fill="x", expand=True)
+            elif choice == "By Course Title":
+                search_var = ctk.StringVar()
+                search_var.trace("w", lambda *args: show_results(
+                    logic_package.search_title(logic_package.schedules, search_var.get().strip().upper()) or []
+                ))
+                ctk.CTkEntry(search_frame,
+                                        placeholder_text="  🔍︎Search Course Title",
+                                        textvariable=search_var,
+                                        font=("Georgia", 15),
+                                        width=500,
+                                        height=50).pack(side="left",pady = 5, fill="x", expand=True)
+            elif choice == "By Day":
+                ctk.CTkLabel(search_frame,
+                    text="Choose day:",
+                    font=("Georgia", 14),
+                    justify="left",
+                    width=LABEL_WIDTH,
+                    text_color="#344E41").pack(side="left", padx=(0, 10), pady=5)
+                selected_day = ctk.StringVar(value="Monday")
+                selected_day.trace("w", lambda *args: show_results(
+                    logic_package.search_day(logic_package.schedules, selected_day.get()) or []
+                ))
+                ctk.CTkOptionMenu(search_frame,
+                        values=["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
+                                "Friday", "Saturday"],
+                        variable=selected_day,
+                        width=350,
+                        height=40,
+                        fg_color="#A8B89A",
+                        button_color="#6F8F62",
+                        button_hover_color="#4E7A57",
+                        text_color="#244032",
+                        dropdown_fg_color="#F8F5F0",
+                        dropdown_text_color="#244032",
+                        dropdown_hover_color="#DDE5D8").pack(side="left")
+                
+            elif choice == "By Time":
+                default_hour = ctk.StringVar(value="01")
+                default_minute = ctk.StringVar(value="00")
+                def update_time_search(*args):
+                    time = f"{default_hour.get()} : {default_minute.get()}"
+                    show_results(logic_package.search_time(logic_package.schedules, time) or [])
+                default_hour.trace("w", update_time_search)
+                default_minute.trace("w", update_time_search)
+                
+                ctk.CTkLabel(search_frame,
+                    text="Enter Time:",
+                    font=("Georgia", 14),
+                    justify="left",
+                    width=LABEL_WIDTH,
+                    text_color="#344E41").pack(side="left", padx=(0, 10), pady=5)
+                hour_values = [f"{h:02d}" for h in range(1, 24)]
+                hour_entry = ctk.CTkOptionMenu(search_frame,
+                        values=hour_values,
+                        variable=default_hour,
+                        width=100,
+                        height=40,
+                        fg_color="#A8B89A",
+                        button_color="#6F8F62",
+                        button_hover_color="#4E7A57",
+                        text_color="#244032",
+                        dropdown_fg_color="#F8F5F0",
+                        dropdown_text_color="#244032",
+                        dropdown_hover_color="#DDE5D8")
+                hour_entry.pack(side="left")
+                ctk.CTkLabel(search_frame,
+                    text=":",
+                    font=("Georgia", 14),
+                    justify="left",
+                    width=50,
+                    text_color="#344E41").pack(side="left", padx=(0, 5), pady=5)
+                minute_values = [f"{m:02d}" for m in range(60)]
+                minute_entry = ctk.CTkOptionMenu(search_frame,
+                        values=minute_values,
+                        variable=default_minute,
+                        width=100,
+                        height=40,
+                        fg_color="#A8B89A",
+                        button_color="#6F8F62",
+                        button_hover_color="#4E7A57",
+                        text_color="#244032",
+                        dropdown_fg_color="#F8F5F0",
+                        dropdown_text_color="#244032",
+                        dropdown_hover_color="#DDE5D8")
+                minute_entry.pack(side="left")
+            elif choice == "By Room":
+                search_var = ctk.StringVar()
+                search_var.trace("w", lambda *args: show_results(
+                    logic_package.search_room(logic_package.schedules, search_var.get().strip().lower()) or []
+                ))
+                search_code = ctk.CTkEntry(search_frame,
+                                        placeholder_text="  🔍︎Search Room",
+                                        font=("Georgia", 15),
+                                        textvariable=search_var,
+                                        width=500,
+                                        height=50)
+                search_code.pack(side="left",pady = 5, fill="x", expand=True)
+            
+    cat_entry = ctk.CTkOptionMenu(cat_frame,
+                                values=["By Course Code", "By Course Title", "By Day", "By Time", "By Room"],
+                                command=change_searchbox,
+                                width=350,
+                                height=40,
+                                fg_color="#A8B89A",
+                                button_color="#6F8F62",
+                                button_hover_color="#4E7A57",
+                                text_color="#244032",
+                                dropdown_fg_color="#F8F5F0",
+                                dropdown_text_color="#244032",
+                                dropdown_hover_color="#DDE5D8")
+    cat_entry.pack(side="left")
+    change_searchbox(cat_entry.get())
+    
+    
+                    
+
+        
 def show_update_schedule():
     ctk.CTkLabel(content_frame,
                  text="update Sched",
@@ -306,7 +498,7 @@ def show_delete_schedule():
     
 def switch_view(view_name):
     for widget in content_frame.winfo_children():
-        widget.destroy()
+        widget.destroy()    
         
     if view_name == "add":
         show_add_schedule()
