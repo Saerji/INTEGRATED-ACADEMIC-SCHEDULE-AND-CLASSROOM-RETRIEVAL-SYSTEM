@@ -12,6 +12,7 @@ def save_schedules(schedules):
         json.dump(schedules, file, indent = 4)
     
 def add_schedule(schedules, course_code, course_title, schedule_day, schedule_time, schedule_room):    
+    course_code = course_code.upper()
     entry = {
         "Title" : course_title,
         "Day" : schedule_day,
@@ -27,10 +28,9 @@ def add_schedule(schedules, course_code, course_title, schedule_day, schedule_ti
 
     #-----------------------------------SEARCH BY COURSE CODE-------------------------------------------
 def search_code(schedules, search_code): 
-    if search_code in schedules:
-        return schedules[search_code]
-    return None
-            
+        if search_code in schedules:
+            return schedules[search_code]
+        return None
     
     #------------------------------------SEARCH BY TIME-------------------------------------------------
 def search_time (schedules, search_time): 
@@ -45,7 +45,7 @@ def search_room (schedules, search_room):
     results = []
     for code, entries in schedules.items():
         for entry in entries:
-            if search_room == entry["Room"].upper():
+            if search_room.lower() in entry["Room"].lower():
                 results.append({"code" : code, **entry})
     return results        
 #--------------------------------------SEARCH BY TITLE------------------------------------------------
