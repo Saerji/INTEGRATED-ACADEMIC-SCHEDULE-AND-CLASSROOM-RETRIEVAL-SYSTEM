@@ -48,6 +48,27 @@ def search_room (schedules, search_room):
             if search_room == entry["Room"].upper():
                 results.append({"code" : code, **entry})
     return results        
+#--------------------------------------SEARCH BY TITLE------------------------------------------------
+def search_title(schedules, search_title):
+    results = []
+    for code, entries in schedules.items():
+        for entry in entries:
+            if search_title.lower() in entry["Title"].lower():
+                results.append({"code": code, **entry})
+                # .lower() on both sides makes it case insensitive
+                # "in" checks if the search text is anywhere in the title
+                # so "adv" would match "Advanced Computer Programming"
+    return results
+#--------------------------------------SEARCH BY DAY------------------------------------------------
+def search_day(schedules, search_day):
+    results = []
+    for code, entries in schedules.items():
+        for entry in entries:
+            if search_day.lower() == entry["Day"].lower():
+                results.append({"code": code, **entry})
+                # == checks for exact match since day is picked from dropdown
+                # .lower() on both sides still keeps it safe
+    return results
 
 def display_schedule(schedules):
     if not schedules:
