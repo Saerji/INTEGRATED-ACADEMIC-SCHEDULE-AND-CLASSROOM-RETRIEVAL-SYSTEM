@@ -215,7 +215,7 @@ def show_add_schedule():
                                    day,
                                    time,
                                    room)
-        messagebox.showinfo("Success" , f"The schedule for the couse {course_code} is addedd successfully.", parent=root)
+        messagebox.showinfo("Success" , f"The schedule for the couse {course_code} is added successfully.", parent=root)
         code_entry.delete(0, "end")
         course_entry.delete(0, "end")
         room_entry.delete(0, "end")
@@ -642,6 +642,14 @@ def show_update_schedule():
     update_frame.pack(fill="both", expand=True, padx=15, pady=10)
     
     data = logic_package.display_schedule(logic_package.schedules)
+    
+    if not data:
+        ctk.CTkLabel(update_frame,
+                     text="No schedules to update. Add one. :)",
+                     font=("Georgia", 24, "bold"),
+                     text_color="#344E41").pack(pady=20)
+        return
+    
     table_data = [["Course Code", "Course Title", "Day", "Time", "Room"]]
     for code, entries in data.items():
         for entry in entries:
@@ -660,10 +668,122 @@ def show_update_schedule():
             command=on_click).pack(fill="both", expand=True, padx=20, pady=10)    
                     
 def show_delete_schedule():
+    LABEL_WIDTH = 180
+    PADY = 5
     ctk.CTkLabel(content_frame,
-                 text="delete sched",
-                 font=("Arial", 20, "bold")
-                 ).pack()
+                 text="Delete Schedule",
+                 font=("Georgia", 24, "bold"),
+                 text_color="#344E41").pack(padx=20, pady=20)
+    ctk.CTkFrame(content_frame, fg_color="#7A8B76", height=1).pack(fill="x", padx=15, pady=10) #divider
+    ctk.CTkLabel(content_frame,
+                 text="Click the schedule you would want to delete:",
+                 font=("Georgia", 14, "bold"),
+                 text_color="#344E41").pack(anchor="w", padx=20, pady=10)
+    
+    data = logic_package.display_schedule(logic_package.schedules)
+    
+    if not data:
+        ctk.CTkLabel(content_frame,
+                     text="No schedules to update. Add one. :)",
+                     font=("Georgia", 24, "bold"),
+                     text_color="#344E41").pack(pady=20)
+        return
+    
+    table_data = [["course Code", "Course Title", "Day", "Time", "Room"]]
+    for code, entries in data.items():
+        for entry in entries:
+            table_data.append([code,
+                               entry["Title"],
+                               entry["Day"],
+                               entry["Time"],
+                               entry["Room"]])
+            
+    def on_click(cell):
+        if cell["row"] == 0:
+            return
+
+        row_data = table_data[cell["row"]]
+        
+        popup = ctk.CTkToplevel(root)
+        popup.title("Delete Schedule")
+        popup.geometry("500x250")
+        popup.grab_set()
+        
+        ctk.CTkLabel(popup,
+                     text="⚠️ Are you sure you want to delete this schedule?",
+                     font=("Georgia", 14, "bold"),
+                     text_color="#8E508E").pack(anchor = "w", padx=20, pady=(20, 5))
+
+        ctk.CTkFrame(popup, fg_color="#7A8B76", height=1).pack(fill="x", padx=15, pady=8)
+        
+        details = f"Course Code: {row_data[0]}\nCourse Title: {row_data[1]}\nDay: {row_data[2]}\nTime: {row_data[3]}\nRoom: {row_data[4]}\n"
+        ctk.CTkLabel(popup,
+                     text = details,
+                     font=("Georgia", 14, "bold"),
+                     text_color="#344E41",
+                     justify="left").pack(padx=20, pady=10, anchor="w")
+        
+        def confirm():
+            code = row_data[0]
+            
+            index = None
+            for i, entry in enumerate(logic_package.schedules[code]):
+                if (entry["Title"] == row_data[1] and
+                    entry["Day"]   == row_data[2] and
+                    entry["Time"]  == row_data[3] and
+                    entry["Room"]  == row_data[4]):
+                    index = i + 1
+                    break
+                
+            if index is None:
+                messagebox.showerror("Error", "Schedule not found!", parent=popup)
+                return
+            
+            result = logic_package.delete_schedule(logic_package.schedules, code, index)
+            
+            if result == "all_deleted":
+                messagebox.showinfo("Success", f"All schedules for the course code {code} are deleted successfully!")
+            else:
+                messagebox.showinfo("Success", "Schedule deleted successfully!")
+                
+            popup.destroy()
+            switch_view("delete")
+            
+        btn_frame = ctk.CTkFrame(popup, fg_color="transparent")
+        btn_frame.pack(pady=15)
+            
+        ctk.CTkButton(btn_frame,
+                        text="Confirm",
+                        font=("Georgia", 13, "bold"),
+                        fg_color="#C0392B",
+                        hover_color="#A93226",
+                        text_color="#F8F4EC",
+                        width=120, height=38,
+                        corner_radius=6,
+                        command=confirm).pack(side="left", padx=10)
+        
+        ctk.CTkButton(btn_frame,
+                        text="Cancel",
+                        font=("Georgia", 13, "bold"),
+                        fg_color="#C0392B",
+                        hover_color="#A93226",
+                        text_color="#F8F4EC",
+                        width=120, height=38,
+                        corner_radius=6,
+                        command=popup.destroy).pack(side="left", padx=10)
+    
+    delete_frame = ctk.CTkFrame(content_frame, fg_color="transparent")
+    delete_frame.pack(fill="both", expand=True, padx=15, pady=10)
+    
+    CTkTable(delete_frame,
+            row=len(table_data),
+            values=table_data,
+            header_color="#6B8F5E",
+            colors=["#A8B89A", "#A8B89A"],
+            hover_color="#EEF2EA",
+            font = ("Georgia", 13),
+            command=on_click).pack(fill="both", expand=True, padx=20, pady=10)
+    
     
 def switch_view(view_name):
     for widget in content_frame.winfo_children():
