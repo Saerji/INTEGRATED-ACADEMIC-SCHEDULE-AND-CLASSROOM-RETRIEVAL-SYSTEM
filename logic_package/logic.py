@@ -1,13 +1,13 @@
 import json
 import os
 
-def load_schedules():
+def load_schedules(): #loading json file
     if os.path.exists("schedules.json"):
         with open("schedules.json", "r") as file:
             return json.load(file)
     return {}
 
-def save_schedules(schedules):
+def save_schedules(schedules): #saving schedules
     with open("schedules.json", "w") as file:
         json.dump(schedules, file, indent = 4)
     
@@ -34,7 +34,7 @@ def search_code(schedules, search_code):
             # "in" checks if the query is ANYWHERE in the code
             # so "CS" would match "CS 102"
             for entry in entries:
-                results.append({"code": code, **entry})
+                results.append({"code": code, **entry}) # ** is used for dictionary unpacking
     return results
     #------------------------------------SEARCH BY TIME-------------------------------------------------
 def search_time (schedules, search_time): 
@@ -97,7 +97,7 @@ def delete_schedule(schedules, code, num):
     if len(schedules[code]) == 0:
         del schedules[code]
         save_schedules(schedules)
-        return "all_deleted"    # ✅ tells GUI all schedules for that code are gone
+        return "all_deleted"    # tells GUI all schedules for that code are gone
 
     save_schedules(schedules)
     return "deleted" 

@@ -1,9 +1,22 @@
+'''Schedula is developed in order to assist academic personalities such as students or instructors to construct a schedules system to provide visual information about their schedules.
+
+With Schedula, you can:
+  ✦  Add new academic schedules with complete course details
+  ✦  View all existing schedules in a clear and organized manner
+  ✦  Search for existing schedules by course code, title, day, time, or room
+  ✦  Update outdated or incorrect schedule information
+  ✦  Delete schedules that are no longer needed
+
+Developed by: Sergie Alexis S. Maldonado
+Course: CC 102 – Advanced Computer Programming
+Batangas State University'''
+
 import customtkinter as ctk
 from tkinter import messagebox
-from CTkTable import CTkTable
-import logic_package
+from CTkTable import CTkTable #installable library for tables used by Custom TKinter
+import logic_package #import logic file (modular programming)
 import datetime
-from PIL import Image
+from PIL import Image #installable library for image insertion
 
 ctk.set_appearance_mode("light")
 ctk.set_default_color_theme("green")
@@ -142,7 +155,7 @@ textbox.configure(state="disabled")
 
 
 
-
+#adding schedule function
 def show_add_schedule():
     LABEL_WIDTH = 150
     PADY = 5
@@ -207,7 +220,7 @@ def show_add_schedule():
     time_frame = ctk.CTkFrame(content_frame, fg_color="transparent")
     time_frame.pack(anchor="w", pady=PADY, padx=20)
     ctk.CTkLabel(time_frame,
-                 text="Enter Time:",
+                 text="Enter time:",
                  font=("Georgia", 14),
                  justify="left",
                  width=LABEL_WIDTH,
@@ -298,6 +311,7 @@ def show_add_schedule():
                   corner_radius=6,
                   command=submit).pack(anchor="w", padx=20, pady=20)
 
+#view schedules function
 def show_view_schedules():
     LABEL_WIDTH = 150
     PADY = 5
@@ -352,6 +366,7 @@ def show_view_schedules():
                               )
     schedules_table.pack(fill="both", expand=True, padx=20, pady=10)
     
+#search schedules tab
 def show_search_schedule():
     LABEL_WIDTH = 180
     PADY = 5
@@ -545,6 +560,7 @@ def show_search_schedule():
     cat_entry.pack(side="left")
     change_searchbox(cat_entry.get())
     
+#update schedules tab
 def show_update_schedule():
     LABEL_WIDTH = 180
     PADY = 5
@@ -731,7 +747,8 @@ def show_update_schedule():
             hover_color="#EEF2EA",
             font = ("Georgia", 13),
             command=on_click).pack(fill="both", expand=True, padx=20, pady=10)    
-                    
+  
+#delete schedules tab                  
 def show_delete_schedule():
     LABEL_WIDTH = 180
     PADY = 5
@@ -754,7 +771,7 @@ def show_delete_schedule():
                      text_color="#344E41").pack(pady=20)
         return
     
-    table_data = [["course Code", "Course Title", "Day", "Time", "Room"]]
+    table_data = [["Course Code", "Course Title", "Day", "Time", "Room"]]
     for code, entries in data.items():
         for entry in entries:
             table_data.append([code,
@@ -849,7 +866,7 @@ def show_delete_schedule():
             font = ("Georgia", 13),
             command=on_click).pack(fill="both", expand=True, padx=20, pady=10)
     
-    
+#click functions (allows the tab switching)
 def switch_view(view_name):
     for widget in content_frame.winfo_children():
         widget.destroy()    

@@ -1,18 +1,58 @@
 {
-    "SDSADD": [
-        {
-            "Title": "dsacsdfe",
-            "Day": "Tuesday",
-            "Time": "01 : 00",
-            "Room": "sdaasffsa"
-        }
-    ],
     "CS 102": [
         {
-            "Title": "Advanced  Computer Programming",
+            "Title": "Advanced Computer Programming",
             "Day": "Monday",
             "Time": "10 : 00",
-            "Room": "LAB 3"
+            "Room": "LAB3"
+        },
+        {
+            "Title": "Advanced Computer Programming",
+            "Day": "Wednesday",
+            "Time": "09 : 00",
+            "Room": "402"
+        }
+    ],
+    "CS 103": [
+        {
+            "Title": "Data Structures and Algorithms",
+            "Day": "Thursday",
+            "Time": "13 : 00",
+            "Room": "LAB3"
+        },
+        {
+            "Title": "Data Structures and Algorithms",
+            "Day": "Friday",
+            "Time": "14 : 00",
+            "Room": "401"
+        }
+    ],
+    "MATH 102": [
+        {
+            "Title": "Integral Calculus",
+            "Day": "Wednesday",
+            "Time": "15 : 00",
+            "Room": "402"
+        },
+        {
+            "Title": "Integral Calculus",
+            "Day": "Friday",
+            "Time": "09 : 00",
+            "Room": "401"
+        }
+    ],
+    "GED 109": [
+        {
+            "Title": "Life and Works of Rizal",
+            "Day": "Thursday",
+            "Time": "17 : 30",
+            "Room": "105"
+        },
+        {
+            "Title": "Life and Works of Rizal",
+            "Day": "Friday",
+            "Time": "17 : 30",
+            "Room": "105"
         }
     ]
 }
