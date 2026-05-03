@@ -155,7 +155,7 @@ textbox.configure(state="disabled")
 
 
 
-#adding schedule function
+#adding schedule tab
 def show_add_schedule():
     LABEL_WIDTH = 150
     PADY = 5
@@ -225,8 +225,8 @@ def show_add_schedule():
                  justify="left",
                  width=LABEL_WIDTH,
                  text_color="#344E41").pack(side="left", padx=(0, 10), pady=5)
-    hour_values = [f"{h:02d}" for h in range(1, 24)]
-    default_hour = ctk.StringVar(value="01")
+    hour_values = [f"{h:02d}" for h in range(24)]
+    default_hour = ctk.StringVar(value="00")
     hour_entry = ctk.CTkOptionMenu(time_frame,
                       values=hour_values,
                       variable=default_hour,
@@ -311,7 +311,7 @@ def show_add_schedule():
                   corner_radius=6,
                   command=submit).pack(anchor="w", padx=20, pady=20)
 
-#view schedules function
+#view schedules tab
 def show_view_schedules():
     LABEL_WIDTH = 150
     PADY = 5
@@ -484,7 +484,7 @@ def show_search_schedule():
                         dropdown_hover_color="#DDE5D8").pack(side="left")
                 
             elif choice == "By Time":
-                default_hour = ctk.StringVar(value="01")
+                default_hour = ctk.StringVar(value="00")
                 default_minute = ctk.StringVar(value="00")
                 def update_time_search(*args):
                     time = f"{default_hour.get()} : {default_minute.get()}"
@@ -498,7 +498,7 @@ def show_search_schedule():
                     justify="left",
                     width=LABEL_WIDTH,
                     text_color="#344E41").pack(side="left", padx=(0, 10), pady=5)
-                hour_values = [f"{h:02d}" for h in range(1, 24)]
+                hour_values = [f"{h:02d}" for h in range(24)]
                 hour_entry = ctk.CTkOptionMenu(search_frame,
                         values=hour_values,
                         variable=default_hour,
@@ -620,7 +620,7 @@ def show_update_schedule():
         else:
             timeupdate_frame = ctk.CTkFrame(popup, fg_color="transparent")
             timeupdate_frame.pack()
-            hour_values = [f"{h:02d}" for h in range(1, 24)]
+            hour_values = [f"{h:02d}" for h in range(24)]
             edit_var_hour = ctk.StringVar(value=cell["value"][:-5])
             edit_var_min = ctk.StringVar(value=cell["value"][5:])
             ctk.CTkOptionMenu(timeupdate_frame,
