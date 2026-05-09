@@ -1,3 +1,3 @@
-# ![alt text](logo_white.png) Schedula
+<img src="logo_white.png" width="50%"> Schedula
 
 schedula
